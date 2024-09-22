@@ -1,0 +1,30 @@
+{
+    "appenders": {
+        "file": {
+            "type": "file",
+            "filename": "logs/app.log"
+        },
+        "errorFile": {
+            "type": "file",
+            "filename": "logs/error.log"
+        },
+        "console": {
+            "type": "console"
+        }
+    },
+    "categories": {
+        "default": {
+            "appenders": [
+                "file",
+                "console"
+            ],
+            "level": "warn"
+        },
+        "error": {
+            "appenders": [
+                "errorFile"
+            ],
+            "level": "error"
+        }
+    }
+}
