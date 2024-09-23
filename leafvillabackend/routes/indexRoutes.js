@@ -48,12 +48,20 @@ router.post(
 );
 // list villa get method
 router.get('/villa/:page', auth.verifyToken, indexController.getVillaByLimits);
-// add villa post method
+// search villa get method
+router.get('/searchVilla', auth.verifyToken, indexController.searchVilla);
+// add region post method
 router.post(
 	'/region',
 	auth.verifyToken,
 	regionValidator,
 	indexController.postRegion,
+);
+// list region post method
+router.get(
+	'/region/:page',
+	auth.verifyToken,
+	indexController.getRegionByLimits,
 );
 // add banner image  post method
 router.post(
@@ -62,4 +70,6 @@ router.post(
 	upload.single('image'),
 	indexController.postbannerImage,
 );
+// add banner image  post method
+router.get('/bannerImage', auth.verifyToken, indexController.getBannerImage);
 module.exports = router;

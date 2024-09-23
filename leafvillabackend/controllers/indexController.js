@@ -125,28 +125,23 @@ exports.postVilla = async (req, res) => {
 		});
 	}
 };
+// get villa by limits
 exports.getVillaByLimits = async (req, res) => {
 	log.info('Index controller: list villa get method');
-
 	let { page } = req.params;
 	let { limit } = req.query;
 	let offset, total, totalPages;
-
 	try {
 		// Validate and sanitize pagination inputs
 		page = Math.max(1, parseInt(page, 10) || 1); // Default page is 1, ensure page is >= 1
 		limit = Math.max(1, parseInt(limit, 10) || 10); // Default limit is 10, ensure limit is >= 1
-
 		offset = (page - 1) * limit;
-
 		// Fetch total count for pagination
 		const countData = await indexModels.fetchVillaCount();
 		total = countData[0].count;
 		totalPages = Math.ceil(total / limit);
-
 		// Fetch the data based on limit and offset
 		const data = await indexModels.fetchVillaByLimit(limit, offset);
-
 		// Respond with data, page info, and total count for pagination
 		return res.status(200).json({
 			success: true,
@@ -166,7 +161,49 @@ exports.getVillaByLimits = async (req, res) => {
 		});
 	}
 };
-
+// search villa
+exports.searchVilla = async (req, res) => {
+	log.info('Index controller: Search villa get method');
+	let { page, limit, villa } = req.query;
+	let offset, total, totalPages;
+	try {
+		// Check if tenantId exists
+		if (!villa) {
+			return res
+				.status(400)
+				.json({ success: false, msg: 'Villa name is missing' });
+		}
+		console.log('villa', req);
+		villa = '%' + villa + '%';
+		// Validate and sanitize pagination inputs
+		page = Math.max(1, parseInt(page, 10) || 1); // Default page is 1, ensure page is >= 1
+		limit = Math.max(1, parseInt(limit, 10) || 10); // Default limit is 10, ensure limit is >= 1
+		offset = (page - 1) * limit;
+		// Fetch total count for pagination
+		const countData = await indexModels.searchVillaCount(villa);
+		total = countData[0].count;
+		totalPages = Math.ceil(total / limit);
+		// Fetch the data based on limit and offset
+		const data = await indexModels.searchVillaByLimit(villa, limit, offset);
+		// Respond with data, page info, and total count for pagination
+		return res.status(200).json({
+			success: true,
+			msg: 'Villa fetched successfully',
+			data: {
+				page,
+				totalPages,
+				totalItems: total,
+				villas: data,
+			},
+		});
+	} catch (error) {
+		errorLog.error('Error  searching villa get method', error);
+		return res.status(500).json({
+			success: false,
+			msg: 'Internal Server Error',
+		});
+	}
+};
 // add region post method
 exports.postRegion = async (req, res) => {
 	log.info('Index controller:Add region post  method');
@@ -188,6 +225,42 @@ exports.postRegion = async (req, res) => {
 			success: false,
 			msg: 'Server Error',
 			error: error.message,
+		});
+	}
+};
+// get region by limits
+exports.getRegionByLimits = async (req, res) => {
+	log.info('Index controller: list villa get method');
+	let { page } = req.params;
+	let { limit } = req.query;
+	let offset, total, totalPages;
+	try {
+		// Validate and sanitize pagination inputs
+		page = Math.max(1, parseInt(page, 10) || 1); // Default page is 1, ensure page is >= 1
+		limit = Math.max(1, parseInt(limit, 10) || 10); // Default limit is 10, ensure limit is >= 1
+		offset = (page - 1) * limit;
+		// Fetch total count for pagination
+		const countData = await indexModels.fetchRegionCount();
+		total = countData[0].count;
+		totalPages = Math.ceil(total / limit);
+		// Fetch the data based on limit and offset
+		const data = await indexModels.fetchRegionByLimit(limit, offset);
+		// Respond with data, page info, and total count for pagination
+		return res.status(200).json({
+			success: true,
+			msg: 'Regions fetched successfully',
+			data: {
+				page,
+				totalPages,
+				totalItems: total,
+				regions: data,
+			},
+		});
+	} catch (error) {
+		errorLog.error('Error in listing villa get method', error);
+		return res.status(500).json({
+			success: false,
+			msg: 'Internal Server Error',
 		});
 	}
 };
@@ -235,6 +308,28 @@ exports.postbannerImage = async (req, res) => {
 			success: false,
 			msg: 'Server Error',
 			error: error.message,
+		});
+	}
+};
+// get banner image
+exports.getBannerImage = async (req, res) => {
+	log.info('Index controller: list banner image get method');
+
+	try {
+		const data = await indexModels.fetchBannerImage();
+		data.forEach(data => {
+			data.url = process.env.BANNER_IMAGE_URL + data.bannerImage;
+		});
+		return res.status(200).json({
+			success: true,
+			msg: 'Banner image fetched successfully',
+			data: data,
+		});
+	} catch (error) {
+		errorLog.error('Error in banner image get method', error);
+		return res.status(500).json({
+			success: false,
+			msg: 'Internal Server Error',
 		});
 	}
 };

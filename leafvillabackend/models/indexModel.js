@@ -147,6 +147,45 @@ class indexModels {
 			}
 		}
 	}
+	// search villa count from db
+	async searchVillaCount(villa) {
+		log.info('Index models: Search villa count from database');
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'SELECT COUNT(*) AS count FROM tb_featuredVillas WHERE villaName LIKE ?;',
+				[villa],
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error fetching search count from database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
+	// region  count from db
+	async fetchRegionCount() {
+		log.info('Index models: Region count from database');
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'SELECT COUNT(*) AS count FROM tb_region ;',
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error fetching region count from database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
 	// fetch villa by limit from db
 	async fetchVillaByLimit(limit, offset) {
 		log.info(
@@ -156,12 +195,56 @@ class indexModels {
 		try {
 			connection = await pool.acquire();
 			const [results] = await connection.query(
-				'SELECT villaName,villaId FROM tb_featuredVillas LIMIT ? OFFSET ?;',
+				'SELECT villaName,villaId FROM tb_featuredVillas ORDER BY villaId DESC LIMIT ? OFFSET ?;',
 				[limit, offset],
 			);
 			return results;
 		} catch (error) {
 			errorLog.error('Error fetching villas  from database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
+	// search villa by limit from db
+	async searchVillaByLimit(villa, limit, offset) {
+		log.info(
+			'Index models: Fetching villas with limit and offset from database',
+		);
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'SELECT villaName,villaId FROM tb_featuredVillas  WHERE villaName LIKE ? ORDER BY villaId DESC LIMIT ? OFFSET ?;',
+				[villa, limit, offset],
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error fetching villas  from database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
+	//  region by limit from db
+	async fetchRegionByLimit(limit, offset) {
+		log.info(
+			'Index models: Fetching region with limit and offset from database',
+		);
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'SELECT id,region FROM tb_region ORDER BY id DESC LIMIT ? OFFSET ?;',
+				[limit, offset],
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error fetching region  from database', error);
 			throw error;
 		} finally {
 			if (connection) {
@@ -182,6 +265,25 @@ class indexModels {
 			return results;
 		} catch (error) {
 			errorLog.error('Error inserting banner image into database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
+	// get banner image from db
+	async fetchBannerImage() {
+		log.info('Index models: Get banner image from database');
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'SELECT id,bannerImage FROM tb_bannerImages;',
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error fetching banner images from database', error);
 			throw error;
 		} finally {
 			if (connection) {
