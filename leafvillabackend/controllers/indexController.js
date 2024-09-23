@@ -311,7 +311,7 @@ exports.postbannerImage = async (req, res) => {
 		});
 	}
 };
-// get banner image
+// list banner image get method
 exports.getBannerImage = async (req, res) => {
 	log.info('Index controller: list banner image get method');
 
