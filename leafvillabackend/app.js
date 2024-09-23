@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname + '/public')));
 
-const indexRouter = require('./routes/index_routes');
-app.use('/', indexRouter);
+const indexRouter = require('./routes/indexRoutes');
+app.use('/api', indexRouter);
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log("Server running on port" + PORT);
-}); 
+	console.log('Server running on port' + PORT);
+});
