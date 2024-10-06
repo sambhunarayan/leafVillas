@@ -39,6 +39,7 @@ exports.index = async (req, res) => {
 
 // get login
 exports.login = async (req, res) => {
+	log.info('indexController:login GET method');
 	let username, password;
 	try {
 		username = req.body.username;
@@ -75,7 +76,7 @@ exports.login = async (req, res) => {
 };
 // add villa post method
 exports.postVilla = async (req, res) => {
-	log.info('Index controller:Add villa post  method');
+	log.info('indexController:Add villa post  method');
 	const {
 		villaName,
 		roomNo,
@@ -131,7 +132,7 @@ exports.postVilla = async (req, res) => {
 };
 // get villa by limits
 exports.getVillaByLimits = async (req, res) => {
-	log.info('Index controller: list villa get method');
+	log.info('indexController: list villa get method');
 	let { page } = req.params;
 	let { limit } = req.query;
 	let offset, total, totalPages;
@@ -167,7 +168,7 @@ exports.getVillaByLimits = async (req, res) => {
 };
 // search villa
 exports.searchVilla = async (req, res) => {
-	log.info('Index controller: Search villa get method');
+	log.info('indexController: Search villa get method');
 	let { page, limit, villa } = req.query;
 	let offset, total, totalPages;
 	try {
@@ -210,7 +211,7 @@ exports.searchVilla = async (req, res) => {
 };
 // add region post method
 exports.postRegion = async (req, res) => {
-	log.info('Index controller:Add region post  method');
+	log.info('indexController:Add region post  method');
 	const { region } = req.body;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -234,7 +235,7 @@ exports.postRegion = async (req, res) => {
 };
 // get region by limits
 exports.getRegionByLimits = async (req, res) => {
-	log.info('Index controller: list villa get method');
+	log.info('indexController: list villa get method');
 	let { page } = req.params;
 	let { limit } = req.query;
 	let offset, total, totalPages;
@@ -270,7 +271,7 @@ exports.getRegionByLimits = async (req, res) => {
 };
 // add banner image post method
 exports.postbannerImage = async (req, res) => {
-	log.info('Index controller: Add banner image post method');
+	log.info('indexController: Add banner image post method');
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(400).json({ errors: errors.array() });
@@ -317,7 +318,7 @@ exports.postbannerImage = async (req, res) => {
 };
 // list banner image get method
 exports.getBannerImage = async (req, res) => {
-	log.info('Index controller: list banner image get method');
+	log.info('indexController: list banner image get method');
 
 	try {
 		const data = await indexModels.fetchBannerImage();

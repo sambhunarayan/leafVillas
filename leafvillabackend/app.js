@@ -37,9 +37,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname + '/public')));
-app.get('/*', function (req, res) {
-	res.sendFile(path.join(__dirname, '/public', 'index.html'));
-});
 const indexRouter = require('./routes/indexRoutes');
 app.use('/api', indexRouter);
 const PORT = process.env.PORT || 3000;

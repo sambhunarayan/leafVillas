@@ -1,7 +1,7 @@
 const pool = require('../config/dbConnection');
 // configure log
 var log4js = require('log4js');
-var log = log4js.getLogger();
+var log = log4js.getLogger('indexModels');
 const errorLog = log4js.getLogger('error');
 log4js.configure('./log.json');
 class indexModels {
@@ -43,7 +43,7 @@ class indexModels {
 	}
 	// check for user
 	async login(username, password) {
-		log.info('Login Details');
+		log.info('indexModels:Fetch user details from db');
 		try {
 			const connection = await pool.acquire();
 			const [results] = await connection.query(
@@ -74,7 +74,7 @@ class indexModels {
 		services,
 		nearbyAttractions,
 	) {
-		log.info('Index models: Insert villa into database');
+		log.info('indexModels: Insert villa into database');
 		let connection;
 		try {
 			connection = await pool.acquire();
@@ -110,7 +110,7 @@ class indexModels {
 	}
 	// insert villa into db
 	async insertRegion(region) {
-		log.info('Index models: Insert region into database');
+		log.info('indexModels: Insert region into database');
 		let connection;
 		try {
 			connection = await pool.acquire();
@@ -130,7 +130,7 @@ class indexModels {
 	}
 	// fetch villa count from db
 	async fetchVillaCount() {
-		log.info('Index models: Fetch villa count from database');
+		log.info('indexModels: Fetch villa count from database');
 		let connection;
 		try {
 			connection = await pool.acquire();
@@ -149,7 +149,7 @@ class indexModels {
 	}
 	// search villa count from db
 	async searchVillaCount(villa) {
-		log.info('Index models: Search villa count from database');
+		log.info('indexModels: Search villa count from database');
 		let connection;
 		try {
 			connection = await pool.acquire();
@@ -169,7 +169,7 @@ class indexModels {
 	}
 	// region  count from db
 	async fetchRegionCount() {
-		log.info('Index models: Region count from database');
+		log.info('indexModels: Region count from database');
 		let connection;
 		try {
 			connection = await pool.acquire();
@@ -189,7 +189,7 @@ class indexModels {
 	// fetch villa by limit from db
 	async fetchVillaByLimit(limit, offset) {
 		log.info(
-			'Index models: Fetching villas with limit and offset from database',
+			'indexModels: Fetching villas with limit and offset from database',
 		);
 		let connection;
 		try {
@@ -211,7 +211,7 @@ class indexModels {
 	// search villa by limit from db
 	async searchVillaByLimit(villa, limit, offset) {
 		log.info(
-			'Index models: Fetching villas with limit and offset from database',
+			'indexModels: Fetching villas with limit and offset from database',
 		);
 		let connection;
 		try {
@@ -233,7 +233,7 @@ class indexModels {
 	//  region by limit from db
 	async fetchRegionByLimit(limit, offset) {
 		log.info(
-			'Index models: Fetching region with limit and offset from database',
+			'indexModels: Fetching region with limit and offset from database',
 		);
 		let connection;
 		try {
@@ -254,7 +254,7 @@ class indexModels {
 	}
 	// insert banner image into db
 	async insertBannerImage(fileName) {
-		log.info('Index models: Insert banner image into database');
+		log.info('indexModels: Insert banner image into database');
 		let connection;
 		try {
 			connection = await pool.acquire();
@@ -274,7 +274,7 @@ class indexModels {
 	}
 	// get banner image from db
 	async fetchBannerImage() {
-		log.info('Index models: Get banner image from database');
+		log.info('indexModels: Get banner image from database');
 		let connection;
 		try {
 			connection = await pool.acquire();
