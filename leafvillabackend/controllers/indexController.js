@@ -1,6 +1,6 @@
 // configure log
 var log4js = require('log4js');
-var log = log4js.getLogger();
+var log = log4js.getLogger('indexController');
 const errorLog = log4js.getLogger('error');
 log4js.configure('./log.json');
 const utils = require('../config/utils');
@@ -41,6 +41,7 @@ exports.index = async (req, res) => {
 exports.login = async (req, res) => {
 	let username, password;
 	try {
+		log.info('req', req.body);
 		username = req.body.username;
 		password = req.body.password;
 		password = utils.hashPassword(password);
