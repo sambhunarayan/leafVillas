@@ -11,7 +11,7 @@ log4js.configure('./log.json');
 const cors = require('cors');
 const corsOptions = {
 	origin: (origin, callback) => {
-		const whitelist = ['http://localhost:3000', '*'];
+		const whitelist = ['http://localhost', '*'];
 		if (whitelist.indexOf(origin) !== -1 || !origin) {
 			callback(null, true);
 		} else {
