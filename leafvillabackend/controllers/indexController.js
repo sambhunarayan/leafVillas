@@ -14,7 +14,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 // generate token start
 const gnerateAccessToken = async user => {
-	const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '2h' });
+	const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '10h' });
 	return token;
 };
 // get featured villa list
