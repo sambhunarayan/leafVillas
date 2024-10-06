@@ -24,14 +24,6 @@ const corsOptions = {
 	credentials: true,
 	optionsSuccessStatus: 204,
 };
-// const corsOptions = {
-// 	origin: '*', // Allow all origins
-// 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-// 	allowedHeaders: 'Content-Type, Authorization',
-// 	exposedHeaders: 'Content-Length, X-Requested-With',
-// 	credentials: false, // No credentials (cookies, auth headers)
-// 	optionsSuccessStatus: 204,
-// };
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
