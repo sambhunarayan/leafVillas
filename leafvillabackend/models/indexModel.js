@@ -59,6 +59,7 @@ class indexModels {
 	// insert villa into db
 	async insertVilla(
 		villaName,
+		regionId,
 		roomNo,
 		guestNo,
 		propertyDescription,
@@ -79,9 +80,10 @@ class indexModels {
 		try {
 			connection = await pool.acquire();
 			const [results] = await connection.query(
-				'INSERT INTO tb_featuredVillas (villaName, roomNo, guestNo, propertyDescription, location, petFriendly, privatePool, privateLawn, luxury, isVerified, amenities, houseRules, policies, services, nearbyAttractions) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
+				'INSERT INTO tb_featuredVillas (villaName,regionId, roomNo, guestNo, propertyDescription, location, petFriendly, privatePool, privateLawn, luxury, isVerified, amenities, houseRules, policies, services, nearbyAttractions) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
 				[
 					villaName,
+					regionId,
 					roomNo,
 					guestNo,
 					propertyDescription,

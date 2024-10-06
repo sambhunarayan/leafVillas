@@ -79,6 +79,7 @@ exports.postVilla = async (req, res) => {
 	log.info('indexController:Add villa post  method');
 	const {
 		villaName,
+		regionId,
 		roomNo,
 		guestNo,
 		propertyDescription,
@@ -101,6 +102,7 @@ exports.postVilla = async (req, res) => {
 	try {
 		const data = await indexModels.insertVilla(
 			villaName,
+			regionId,
 			roomNo,
 			guestNo,
 			propertyDescription,
