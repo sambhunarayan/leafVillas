@@ -1,4 +1,4 @@
-const pool = require('../config/db_connection');
+const pool = require('../config/dbConnection');
 // configure log
 var log4js = require('log4js');
 var log = log4js.getLogger();
