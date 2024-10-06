@@ -9,19 +9,27 @@ var log4js = require('log4js');
 var log = log4js.getLogger();
 log4js.configure('./log.json');
 const cors = require('cors');
+// const corsOptions = {
+// 	origin: (origin, callback) => {
+// 		const whitelist = ['http://localhost', '*'];
+// 		if (whitelist.indexOf(origin) !== -1 || !origin) {
+// 			callback(null, true);
+// 		} else {
+// 			callback(new Error('Not allowed by CORS'));
+// 		}
+// 	},
+// 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+// 	allowedHeaders: 'Content-Type, Authorization',
+// 	exposedHeaders: 'Content-Length, X-Requested-With',
+// 	credentials: true,
+// 	optionsSuccessStatus: 204,
+// };
 const corsOptions = {
-	origin: (origin, callback) => {
-		const whitelist = ['http://localhost', '*'];
-		if (whitelist.indexOf(origin) !== -1 || !origin) {
-			callback(null, true);
-		} else {
-			callback(new Error('Not allowed by CORS'));
-		}
-	},
+	origin: '*', // Allow all origins
 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 	allowedHeaders: 'Content-Type, Authorization',
 	exposedHeaders: 'Content-Length, X-Requested-With',
-	credentials: true,
+	credentials: false, // No credentials (cookies, auth headers)
 	optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
