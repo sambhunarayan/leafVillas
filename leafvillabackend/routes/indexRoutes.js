@@ -2,7 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const indexController = require('../controllers/indexController');
-const { villaValidator, regionValidator } = require('../helpers/validation');
+const {
+	loginValidator,
+	villaValidator,
+	regionValidator,
+} = require('../helpers/validation');
 const auth = require('../middlewares/auth');
 // session
 const session = require('express-session');
@@ -38,7 +42,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 // load home page
 router.get('/', indexController.index);
-router.post('/login', indexController.login);
+router.post('/login', loginValidator, indexController.login);
 // add villa post method
 router.post(
 	'/villa',

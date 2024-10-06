@@ -9,6 +9,11 @@ const path = require('path');
 // Set up Multer for file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+exports.loginValidator = [
+	check('username').notEmpty().withMessage('Username is required'),
+	check('password').notEmpty().withMessage('Username is required'),
+];
+
 exports.villaValidator = [
 	check('villaName').notEmpty().withMessage('Villa name is required'),
 	check('roomNo').isInt().withMessage('Room number must be an integer'),

@@ -41,9 +41,12 @@ exports.index = async (req, res) => {
 exports.login = async (req, res) => {
 	let username, password;
 	try {
-		log.info('req', req.body);
 		username = req.body.username;
 		password = req.body.password;
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
 		password = utils.hashPassword(password);
 		const login = await indexModels.login(username, password);
 		//generate accesstoken
