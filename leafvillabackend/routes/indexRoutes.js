@@ -61,7 +61,9 @@ router.post(
 	regionValidator,
 	indexController.postRegion,
 );
-// list region post method
+// list region
+router.get('/region', auth.verifyToken, indexController.getRegion);
+// list region by limits post method
 router.get(
 	'/region/:page',
 	auth.verifyToken,

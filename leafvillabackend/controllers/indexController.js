@@ -237,7 +237,7 @@ exports.postRegion = async (req, res) => {
 };
 // get region by limits
 exports.getRegionByLimits = async (req, res) => {
-	log.info('indexController: list villa get method');
+	log.info('indexController: list villa by limits get method');
 	let { page } = req.params;
 	let { limit } = req.query;
 	let offset, total, totalPages;
@@ -262,6 +262,25 @@ exports.getRegionByLimits = async (req, res) => {
 				totalItems: total,
 				regions: data,
 			},
+		});
+	} catch (error) {
+		errorLog.error('Error in listing villa get method', error);
+		return res.status(500).json({
+			success: false,
+			msg: 'Internal Server Error',
+		});
+	}
+};
+exports.getRegion = async (req, res) => {
+	log.info('indexController: list villa get method');
+
+	try {
+		const data = await indexModels.fetchRegion();
+		// Respond with data, page info, and total count for pagination
+		return res.status(200).json({
+			success: true,
+			msg: 'Regions fetched successfully',
+			data: data,
 		});
 	} catch (error) {
 		errorLog.error('Error in listing villa get method', error);

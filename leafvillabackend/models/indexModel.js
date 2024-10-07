@@ -232,6 +232,25 @@ class indexModels {
 			}
 		}
 	}
+	//  region  from db
+	async fetchRegion() {
+		log.info('indexModels: Fetching region  from database');
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'SELECT id,region FROM tb_region ORDER BY region ;',
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error fetching region  from database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
 	//  region by limit from db
 	async fetchRegionByLimit(limit, offset) {
 		log.info(
