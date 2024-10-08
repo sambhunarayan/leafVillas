@@ -1,21 +1,50 @@
-// configure log
+// Configure log4js for logging
 var log4js = require('log4js');
+
+// Create a logger for the indexController
 var log = log4js.getLogger('indexController');
+
+// Create a logger specifically for errors
 const errorLog = log4js.getLogger('error');
+
+// Load the log configuration from an external file (log.json)
 log4js.configure('./log.json');
+
+// Import utility functions from utils module (e.g., helper functions, constants)
 const utils = require('../config/utils');
+
+// Import indexModel, which presumably interacts with the database
 const models = require('../models/indexModel');
+
+// Initialize the models object for database operations
 const indexModels = new models();
-// Module to validate fields
+
+// Import express-validator to validate incoming request fields
 const { validationResult } = require('express-validator');
-// File upload
+
+// File path handling (used for dealing with file upload paths)
 const path = require('path');
-// JWT token module
+
+// Import sharp for image compression/manipulation (used for optimizing images)
+const sharp = require('sharp');
+
+// File system module to handle reading/writing files
+const fs = require('fs');
+
+// Import jsonwebtoken module for handling JWT tokens (used for user authentication/authorization)
 const jwt = require('jsonwebtoken');
+
 // generate token start
-const gnerateAccessToken = async user => {
-	const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '10h' });
-	return token;
+const generateAccessToken = async user => {
+	try {
+		const token = jwt.sign(user, process.env.ACCESS_TOKEN, {
+			expiresIn: '10h',
+		});
+		return token;
+	} catch (error) {
+		errorLog.error('Error generating access token', error);
+		throw error;
+	}
 };
 // get featured villa list
 exports.index = async (req, res) => {
@@ -51,7 +80,7 @@ exports.login = async (req, res) => {
 		password = utils.hashPassword(password);
 		const login = await indexModels.login(username, password);
 		//generate accesstoken
-		const accessToken = await gnerateAccessToken({ user: login });
+		const accessToken = await generateAccessToken({ user: login });
 		if (login.length == 0) {
 			return res.status(200).json({
 				success: true,
@@ -77,8 +106,7 @@ exports.login = async (req, res) => {
 // add villa post method
 exports.postVilla = async (req, res) => {
 	log.info('indexController:Add villa post  method');
-	const {
-		villaName,
+	let villaName,
 		regionId,
 		roomNo,
 		guestNo,
@@ -93,13 +121,83 @@ exports.postVilla = async (req, res) => {
 		houseRules,
 		policies,
 		services,
-		nearbyAttractions,
-	} = req.body;
+		nearbyAttractions;
 	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
-	}
+
 	try {
+		villaName = req.body.villaName;
+		regionId = req.body.regionId;
+		roomNo = req.body.roomNo;
+		guestNo = req.body.guestNo;
+		propertyDescription = req.body.propertyDescription;
+		location = req.body.location;
+		petFriendly = req.body.petFriendly;
+		privatePool = req.body.privatePool;
+		privateLawn = req.body.privateLawn;
+		luxury = req.body.luxury;
+		isVerified = req.body.isVerified;
+		amenities = req.body.amenities;
+		houseRules = req.body.houseRules;
+		policies = req.body.policies;
+		services = req.body.services;
+		nearbyAttractions = req.body.nearbyAttractions;
+
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: errors.array() });
+		}
+		if (!req.files || req.files.length === 0) {
+			return res.status(200).json({
+				success: false,
+				msg: 'No files were uploaded or only JPEG  are allowed.',
+			});
+		}
+		const processedFiles = [];
+
+		for (const file of req.files) {
+			// Get the path of the uploaded file
+			const uploadedFilePath = path.join(
+				__dirname,
+				'../public/uploads/images',
+				file.filename,
+			);
+
+			// Define output path for the JPEG image
+			const jpegFileName = 'lf' + Date.now() + '.jpeg';
+			const outputPath = path.join(
+				__dirname,
+				'../public/uploads/images',
+				jpegFileName,
+			);
+
+			// Use sharp to resize the image and convert it to JPEG format with target size
+			let imageBuffer = await sharp(uploadedFilePath)
+				.resize(200) // Resize to 200px width while maintaining aspect ratio
+				.toFormat('jpeg', { quality: 80 }) // Adjust quality to compress (start with 80)
+				.toBuffer();
+
+			// Check the file size and adjust quality iteratively
+			let quality = 80;
+			while (imageBuffer.length > 100 * 1024 && quality > 20) {
+				// 100KB = 100 * 1024 bytes
+				quality -= 10; // Reduce quality if size exceeds 100KB
+				imageBuffer = await sharp(uploadedFilePath)
+					.resize(200)
+					.toFormat('jpeg', { quality })
+					.toBuffer();
+			}
+
+			// Save the final compressed JPEG file
+			await sharp(imageBuffer).toFile(outputPath);
+
+			// Remove the original file if you only want to keep the JPEG version (optional)
+			fs.unlinkSync(uploadedFilePath);
+
+			// Add the processed file details to the array
+			processedFiles.push({
+				originalName: file.originalname,
+				uploadedPath: jpegFileName,
+			});
+		}
 		const data = await indexModels.insertVilla(
 			villaName,
 			regionId,
@@ -118,6 +216,13 @@ exports.postVilla = async (req, res) => {
 			services,
 			nearbyAttractions,
 		);
+		// insert images to database
+		for (const image of processedFiles) {
+			const fileUpload = await indexModels.insertVillaImages(
+				image.uploadedPath,
+				data.insertId,
+			);
+		}
 		return res.status(200).json({
 			success: true,
 			msg: 'Villa added Successfully',
@@ -214,6 +319,7 @@ exports.searchVilla = async (req, res) => {
 // add region post method
 exports.postRegion = async (req, res) => {
 	log.info('indexController:Add region post  method');
+	log.info('req', req);
 	const { region } = req.body;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -310,13 +416,13 @@ exports.postbannerImage = async (req, res) => {
 		// Define file paths
 		const uploadedFilePath = path.join(
 			__dirname,
-			'../public/uploads/bannerImages',
+			'../public/uploads/images',
 			req.file.filename,
 		);
-		const uploadName = 'bannerImg' + Date.now() + '.jpeg';
+		const uploadName = 'lf' + Date.now() + '.jpeg';
 		const outputPath = path.join(
 			__dirname,
-			'../public/uploads/bannerImages',
+			'../public/uploads/images',
 			uploadName,
 		);
 

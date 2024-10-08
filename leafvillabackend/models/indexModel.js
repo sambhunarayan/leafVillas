@@ -110,6 +110,26 @@ class indexModels {
 			}
 		}
 	}
+	// insert villa images
+	async insertVillaImages(imagePath, id) {
+		log.info('indexModels: Insert villa images into database');
+		let connection;
+		try {
+			connection = await pool.acquire();
+			const [results] = await connection.query(
+				'INSERT INTO tb_images (imageName,villaId) VALUES (?,?);',
+				[imagePath, id],
+			);
+			return results;
+		} catch (error) {
+			errorLog.error('Error inserting  villa  images into database', error);
+			throw error;
+		} finally {
+			if (connection) {
+				pool.release(connection);
+			}
+		}
+	}
 	// insert villa into db
 	async insertRegion(region) {
 		log.info('indexModels: Insert region into database');

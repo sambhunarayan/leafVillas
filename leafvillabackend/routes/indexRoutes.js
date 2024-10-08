@@ -24,11 +24,11 @@ const multer = require('multer');
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		if (file.mimetype === 'image/jpeg') {
-			cb(null, path.join(__dirname, '../public/uploads/bannerImages'));
+			cb(null, path.join(__dirname, '../public/uploads/images'));
 		}
 	},
 	filename: function (req, file, cb) {
-		const name = 'bannerImg' + Date.now();
+		const name = 'lf' + Date.now() + '.jpeg';
 		cb(null, name);
 	},
 });
@@ -47,6 +47,7 @@ router.post('/login', loginValidator, indexController.login);
 router.post(
 	'/villa',
 	auth.verifyToken,
+	upload.array('images', 50),
 	villaValidator,
 	indexController.postVilla,
 );
