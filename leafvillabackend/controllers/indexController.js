@@ -122,6 +122,7 @@ exports.postVilla = async (req, res) => {
 		policies,
 		services,
 		nearbyAttractions;
+	const processedFiles = [];
 	const errors = validationResult(req);
 
 	try {
@@ -151,7 +152,6 @@ exports.postVilla = async (req, res) => {
 				msg: 'No files were uploaded or only JPEG  are allowed.',
 			});
 		}
-		const processedFiles = [];
 
 		for (const file of req.files) {
 			// Get the path of the uploaded file
@@ -194,8 +194,8 @@ exports.postVilla = async (req, res) => {
 
 			// Add the processed file details to the array
 			processedFiles.push({
-				originalName: file.originalname,
-				uploadedPath: jpegFileName,
+				fileName: jpegFileName,
+				url: '../public/uploads/images' + jpegFileName,
 			});
 		}
 		const data = await indexModels.insertVilla(
@@ -219,14 +219,32 @@ exports.postVilla = async (req, res) => {
 		// insert images to database
 		for (const image of processedFiles) {
 			const fileUpload = await indexModels.insertVillaImages(
-				image.uploadedPath,
+				image.fileName,
 				data.insertId,
 			);
 		}
 		return res.status(200).json({
 			success: true,
 			msg: 'Villa added Successfully',
-			data: data,
+			data: {
+				villaName: villaName,
+				regionId: regionId,
+				roomNo: roomNo,
+				guestNo: guestNo,
+				propertyDescription: propertyDescription,
+				location: location,
+				petFriendly: petFriendly,
+				privatePool: privatePool,
+				privateLawn: privateLawn,
+				luxury: luxury,
+				isVerified: isVerified,
+				amenities: amenities,
+				houseRules: houseRules,
+				policies: policies,
+				services: services,
+				nearbyAttractions: nearbyAttractions,
+				images: processedFiles,
+			},
 		});
 	} catch (error) {
 		errorLog.error('Error in post villa method', error);
