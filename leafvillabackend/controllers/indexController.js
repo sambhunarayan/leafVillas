@@ -429,7 +429,7 @@ exports.postbannerImage = async (req, res) => {
 				msg: 'No file uploaded. Only JPEG images are allowed.',
 			});
 		}
-
+		console.log('files', req.file);
 		// Define file paths
 		const uploadedFilePath = path.join(
 			__dirname,
