@@ -258,7 +258,6 @@ exports.postVilla = async (req, res) => {
 // get villa by limits
 exports.getVillaByLimits = async (req, res) => {
 	log.info('indexController: list villa get method');
-	console.log('page', req.params);
 	let { page } = req.params;
 	let { limit } = req.query;
 	let offset, total, totalPages;
@@ -304,7 +303,6 @@ exports.searchVilla = async (req, res) => {
 				.status(400)
 				.json({ success: false, msg: 'Villa name is missing' });
 		}
-		console.log('villa', req);
 		villa = '%' + villa + '%';
 		// Validate and sanitize pagination inputs
 		page = Math.max(1, parseInt(page, 10) || 1); // Default page is 1, ensure page is >= 1
