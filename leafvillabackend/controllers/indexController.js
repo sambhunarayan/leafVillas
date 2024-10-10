@@ -449,7 +449,7 @@ exports.postbannerImage = async (req, res) => {
 		return res.status(200).json({
 			success: true,
 			msg: 'Banner image added successfully',
-			data: data,
+			data: { url: '../public/uploads/images' + uploadName },
 		});
 	} catch (error) {
 		errorLog.error('Error in post banner image method', error);
