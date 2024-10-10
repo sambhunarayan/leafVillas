@@ -142,7 +142,7 @@ exports.postVilla = async (req, res) => {
 		policies = req.body.policies;
 		services = req.body.services;
 		nearbyAttractions = req.body.nearbyAttractions;
-
+		console.log('files', req.files);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
