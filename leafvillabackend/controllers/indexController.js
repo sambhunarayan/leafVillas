@@ -258,6 +258,7 @@ exports.postVilla = async (req, res) => {
 // get villa by limits
 exports.getVillaByLimits = async (req, res) => {
 	log.info('indexController: list villa get method');
+	console.log('page', req.params);
 	let { page } = req.params;
 	let { limit } = req.query;
 	let offset, total, totalPages;
