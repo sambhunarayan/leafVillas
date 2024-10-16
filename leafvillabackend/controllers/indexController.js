@@ -142,7 +142,6 @@ exports.postVilla = async (req, res) => {
 		policies = req.body.policies;
 		services = req.body.services;
 		nearbyAttractions = req.body.nearbyAttractions;
-		console.log('files', req.files);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
 		}
@@ -429,7 +428,6 @@ exports.postbannerImage = async (req, res) => {
 				msg: 'No file uploaded. Only JPEG images are allowed.',
 			});
 		}
-		console.log('files', req.file);
 		// Define file paths
 		const uploadedFilePath = path.join(
 			__dirname,
